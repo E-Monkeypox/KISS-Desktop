@@ -47,6 +47,7 @@ import fr.neamar.kiss.ui.GoogleCalendarIcon;
 import fr.neamar.kiss.ui.ListPopup;
 import fr.neamar.kiss.utils.FuzzyScore;
 import fr.neamar.kiss.utils.SpaceTokenizer;
+import lu.die.foza.SuperAPI.FozaInnerAppInstaller;
 import lu.die.fozacompatibility.FozaActivityManager;
 import lu.die.fozacompatibility.FozaPackageManager;
 
@@ -457,7 +458,20 @@ public class AppResult extends Result {
 
     @Override
     public void doLaunch(Context context, View v) {
-        FozaActivityManager.get().launchApp(className.getPackageName());
+        new Thread()
+        {
+            @Override
+            public void run() {
+                super.run();
+                if(FozaPackageManager.get().getPackageInfo(className.getPackageName()) == null)
+                {
+                    FozaInnerAppInstaller
+                            .getInstance()
+                            .installLocalPackage(className.getPackageName(), false, null);
+                }
+                FozaActivityManager.get().launchApp(className.getPackageName());
+            }
+        }.start();
     }
 
     private Rect getViewBounds(View v) {
