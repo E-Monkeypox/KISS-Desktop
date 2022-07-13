@@ -21,6 +21,15 @@ android {
         versionCode 194
         versionName "3.16.8"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        splits {
+            abi {
+                enable true
+                reset()
+                include 'x86', 'x86_64', 'armeabi-v7a', "arm64-v8a"
+                universalApk true
+            }
+        }
+        resConfigs "en", "zh-rCN", "zh-rTW"
     }
     buildTypes {
         release {
