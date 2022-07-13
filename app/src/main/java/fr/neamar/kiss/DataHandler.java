@@ -55,7 +55,7 @@ public class DataHandler extends BroadcastReceiver
     /**
      * Package the providers reside in
      */
-    final static private String PROVIDER_PREFIX = IProvider.class.getPackage().getName() + ".";
+    final static private String PROVIDER_PREFIX = Provider.class.getPackage().getName() + ".";
     /**
      * List all known providers
      */
