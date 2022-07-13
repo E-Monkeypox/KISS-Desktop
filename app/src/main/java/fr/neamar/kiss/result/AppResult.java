@@ -145,6 +145,7 @@ public class AppResult extends Result {
         adapter.add(new ListPopup.Item(context, R.string.sk_remove_data));
         adapter.add(new ListPopup.Item(context, R.string.sk_kill_process));
         adapter.add(new ListPopup.Item(context, R.string.sk_open_origin));
+        adapter.add(new ListPopup.Item(context, R.string.sk_install_as_module));
 
         try {
             // app installed under /system can't be uninstalled
@@ -181,6 +182,11 @@ public class AppResult extends Result {
         switch (stringId) {
             case R.string.sk_open_origin:
                 openOriginApp(context, appPojo.packageName);
+                return true;
+            case R.string.sk_install_as_module:
+                FozaInnerAppInstaller.getInstance().installLocalPackage(
+                        appPojo.packageName, true, null
+                );
                 return true;
             case R.string.sk_kill_process:
                 FozaActivityManager.get().killAppByPkg(appPojo.packageName);
