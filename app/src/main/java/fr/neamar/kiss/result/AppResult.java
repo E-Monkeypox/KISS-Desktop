@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Rect;
@@ -484,6 +485,21 @@ public class AppResult extends Result {
             @Override
             public void run() {
                 super.run();
+                try{
+                    PackageManager packageManager = context.getPackageManager();
+                    PackageInfo info = packageManager.getPackageInfo(appPojo.packageName, 0);
+                    if((info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                    {
+                        context.startActivity(
+                                packageManager.getLaunchIntentForPackage(appPojo.packageName)
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        );
+                        return;
+                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
                 if(FozaPackageManager.get().getPackageInfo(className.getPackageName()) == null)
                 {
                     FozaInnerAppInstaller
