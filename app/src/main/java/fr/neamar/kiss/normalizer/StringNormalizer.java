@@ -35,6 +35,7 @@ public class StringNormalizer {
      * string position
      */
     public static Result normalizeWithResult(CharSequence input, boolean makeLowercase) {
+        input = FoxUtils.getStringPinYin(input.toString());
         int numCodePoints = Character.codePointCount(input, 0, input.length());
         IntSequenceBuilder codePoints = new IntSequenceBuilder(numCodePoints);
         IntSequenceBuilder resultMap = new IntSequenceBuilder(numCodePoints);

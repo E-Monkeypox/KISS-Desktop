@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@null"
-            tools:src="@drawable/ic_launcher" />
+            tools:src="@mipmap/ic_launcher" />
 
         <ImageView
             android:id="@+id/item_app_icon"
@@ -36,7 +36,7 @@
             android:layout_width="?attr/resultSubIconSize"
             android:layout_height="?attr/resultSubIconSize"
             android:contentDescription="@null"
-            tools:src="@drawable/ic_launcher" />
+            tools:src="@mipmap/ic_launcher" />
     </FrameLayout>
 
     <LinearLayout

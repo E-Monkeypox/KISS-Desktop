@@ -40,7 +40,7 @@
         android:name=".KissApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppThemeLight"
         tools:ignore="GoogleAppIndexingWarning"
@@ -83,7 +83,7 @@
             </intent-filter>
             <meta-data
                 android:name="com.android.systemui.action_assist_icon"
-                android:resource="@drawable/ic_launcher" />
+                android:resource="@mipmap/ic_launcher" />
         </activity>
         <activity
             android:name=".DummyActivity"
