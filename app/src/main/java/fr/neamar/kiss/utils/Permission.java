@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 
 
 public class Permission {
+    // For security reason, just ignore.
+    public static boolean mCanDeliverPermission = false;
     public static final int PERMISSION_READ_CONTACTS = 0;
     public static final int PERMISSION_CALL_PHONE = 1;
     public static final int PERMISSION_READ_PHONE_STATE = 2;
@@ -35,7 +37,7 @@ public class Permission {
     }
 
     public static void askPermission(int permission, PermissionResultListener listener) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || !mCanDeliverPermission) {
             return;
         }
         if (listener != null) {
