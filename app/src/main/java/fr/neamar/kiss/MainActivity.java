@@ -1,5 +1,7 @@
 package fr.neamar.kiss;
 
+import static android.view.HapticFeedbackConstants.LONG_PRESS;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
@@ -63,8 +65,8 @@ import fr.neamar.kiss.ui.SearchEditText;
 import fr.neamar.kiss.utils.PackageManagerUtils;
 import fr.neamar.kiss.utils.Permission;
 import fr.neamar.kiss.utils.SystemUiVisibilityHelper;
-
-import static android.view.HapticFeedbackConstants.LONG_PRESS;
+import lu.die.foza.SuperAPI.FozaCore;
+import lu.die.fozacompatibility.FozaActivityManager;
 
 public class MainActivity extends Activity implements QueryInterface, KeyboardScrollHider.KeyboardHandler, View.OnTouchListener {
 
@@ -376,11 +378,12 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         if(getResources().getConfiguration().keyboard == Configuration.KEYBOARD_QWERTY || getResources().getConfiguration().keyboard == Configuration.KEYBOARD_12KEY) {
             searchEditText.requestFocus();
         }
-
         /*
          * Defer everything else to the forwarders
          */
         forwarderManager.onCreate();
+
+        FozaCore.get().registerCoreCallback(() -> FozaActivityManager.get().acquirePreloadNextProcess());
     }
 
     @Override
@@ -538,6 +541,8 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             case R.id.preferences:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
+            case R.id.kill_all_apps:
+                FozaActivityManager.get().killAllApps();
             default:
                 return super.onOptionsItemSelected(item);
         }

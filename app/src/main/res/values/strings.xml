@@ -333,4 +333,5 @@
     <string name="sk_kill_process">Kill App Process</string>
     <string name="sk_open_origin">Launch Origin App</string>
     <string name="sk_install_as_module">Install As Module</string>
+    <string name="sk_kill_all_apps">Kill All Apps</string>
 </resources>
