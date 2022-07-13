@@ -35,14 +35,14 @@ public class StringNormalizer {
      * string position
      */
     public static Result normalizeWithResult(CharSequence input, boolean makeLowercase) {
-        input = FoxUtils.getStringPinYin(input.toString());
+        String newInput = input.toString();
         int numCodePoints = Character.codePointCount(input, 0, input.length());
         IntSequenceBuilder codePoints = new IntSequenceBuilder(numCodePoints);
         IntSequenceBuilder resultMap = new IntSequenceBuilder(numCodePoints);
         CharBuffer buffer = CharBuffer.allocate(2);
         int i = 0;
         for (int iterCodePoint = 0; iterCodePoint < numCodePoints; iterCodePoint += 1) {
-            int codepoint = Character.codePointAt(input, i);
+            int codepoint = FoxUtils.getStringPinYin(String.valueOf(newInput.charAt(i))).codePointAt(0);
             String decomposedCharString;
             // Is it within the basic latin range?
             // If so, we can skip the expensive call to Normalizer.normalize
