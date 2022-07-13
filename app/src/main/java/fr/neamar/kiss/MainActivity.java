@@ -492,8 +492,10 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     public void onBackPressed() {
         if (mPopup != null) {
             mPopup.dismiss();
+            return;
         } else if (isViewingAllApps()) {
             displayKissBar(false);
+            return;
         } else {
             // If no kissmenu, empty the search bar
             // (this will trigger a new event if the search bar was already empty)
