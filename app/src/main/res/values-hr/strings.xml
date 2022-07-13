@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">KISS pokretač</string>
+    <string name="app_name">Fox pokretač</string>
     <string name="activity_setting">KISS postavke</string>
     <string name="ui_search_hint">Traži aplikacije, kontakte, …</string>
     <string name="ui_item_search">%1$s pretraga za „%2$s”</string>

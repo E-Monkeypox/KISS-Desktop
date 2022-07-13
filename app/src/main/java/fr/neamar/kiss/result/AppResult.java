@@ -1,8 +1,6 @@
 package fr.neamar.kiss.result;
 
-import android.app.ActivityOptions;
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -49,6 +47,8 @@ import fr.neamar.kiss.ui.GoogleCalendarIcon;
 import fr.neamar.kiss.ui.ListPopup;
 import fr.neamar.kiss.utils.FuzzyScore;
 import fr.neamar.kiss.utils.SpaceTokenizer;
+import lu.die.fozacompatibility.FozaActivityManager;
+import lu.die.fozacompatibility.FozaPackageManager;
 
 public class AppResult extends Result {
     private final AppPojo appPojo;
@@ -130,6 +130,8 @@ public class AppResult extends Result {
         adapter.add(new ListPopup.Item(context, R.string.menu_tags_edit));
         adapter.add(new ListPopup.Item(context, R.string.menu_app_details));
         adapter.add(new ListPopup.Item(context, R.string.menu_app_store));
+        adapter.add(new ListPopup.Item(context, R.string.sk_remove_data));
+        adapter.add(new ListPopup.Item(context, R.string.sk_kill_process));
 
         try {
             // app installed under /system can't be uninstalled
@@ -164,6 +166,13 @@ public class AppResult extends Result {
     @Override
     protected boolean popupMenuClickHandler(final Context context, final RecordAdapter parent, int stringId, View parentView) {
         switch (stringId) {
+            case R.string.sk_kill_process:
+                FozaActivityManager.get().killAppByPkg(appPojo.packageName);
+                return true;
+            case R.string.sk_remove_data:
+                FozaActivityManager.get().killAppByPkg(appPojo.packageName);
+                FozaPackageManager.get().uninstallAppFully(appPojo.packageName);
+                return true;
             case R.string.menu_app_details:
                 launchAppDetails(context, appPojo);
                 return true;
@@ -448,48 +457,7 @@ public class AppResult extends Result {
 
     @Override
     public void doLaunch(Context context, View v) {
-        try {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                LauncherApps launcher = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-                assert launcher != null;
-                Rect sourceBounds = null;
-                Bundle opts = null;
-
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    // We're on a modern Android and can display activity animations
-                    // If AppResult, find the icon
-                    View potentialIcon = v.findViewById(R.id.item_app_icon);
-                    if (potentialIcon == null) {
-                        // If favorite, find the icon
-                        potentialIcon = v.findViewById(R.id.favorite);
-                    }
-
-                    if (potentialIcon != null) {
-                        sourceBounds = getViewBounds(potentialIcon);
-
-                        // If we got an icon, we create options to get a nice animation
-                        opts = ActivityOptions.makeClipRevealAnimation(potentialIcon, 0, 0, potentialIcon.getMeasuredWidth(), potentialIcon.getMeasuredHeight()).toBundle();
-                    }
-                }
-
-                launcher.startMainActivity(className, appPojo.userHandle.getRealHandle(), sourceBounds, opts);
-            } else {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                intent.setComponent(className);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    intent.setSourceBounds(getViewBounds(v));
-                }
-
-                context.startActivity(intent);
-            }
-        } catch (ActivityNotFoundException | NullPointerException | SecurityException e) {
-            // Application was just removed?
-            // (null pointer exception can be thrown on Lollipop+ when app is missing)
-            Toast.makeText(context, R.string.application_not_found, Toast.LENGTH_LONG).show();
-        }
+        FozaActivityManager.get().launchApp(className.getPackageName());
     }
 
     private Rect getViewBounds(View v) {

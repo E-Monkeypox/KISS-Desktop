@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 
 import fr.neamar.kiss.utils.IconPackCache;
+import lu.die.foza.SuperAPI.FozaCore;
+import lu.die.fozacompatibility.FozaActivityManager;
 
 public class KissApplication extends Application {
     /**
@@ -17,7 +19,14 @@ public class KissApplication extends Application {
     private DataHandler dataHandler;
     private RootHandler rootHandler;
     private IconsHandler iconsPackHandler;
-    private final IconPackCache mIconPackCache = new IconPackCache();;
+    private final IconPackCache mIconPackCache = new IconPackCache();
+
+    private static final String DEF_DEFAULT_UNAME = "0";
+
+    public static String getDefaultUserName()
+    {
+        return DEF_DEFAULT_UNAME;
+    }
 
     public static KissApplication getApplication(Context context) {
         return (KissApplication) context.getApplicationContext();
@@ -25,6 +34,13 @@ public class KissApplication extends Application {
 
     public static IconPackCache iconPackCache(Context ctx) {
         return getApplication(ctx).mIconPackCache;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        FozaCore.get().startup(base);
+        FozaActivityManager.get().setUserName(DEF_DEFAULT_UNAME);
     }
 
     public DataHandler getDataHandler() {

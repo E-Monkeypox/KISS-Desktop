@@ -164,13 +164,11 @@ public class SettingsActivity extends PreferenceActivity implements
         } else {
             // Run synchronously to ensure preferences can be restored from state
             runnable.run();
-            synchronized (SettingsActivity.this) {
-                if (ItemToRunListContent == null)
-                    ItemToRunListContent = generateItemToRunListContent(this);
+            if (ItemToRunListContent == null)
+                ItemToRunListContent = generateItemToRunListContent(this);
 
-                for (String gesturePref : PREF_LISTS_WITH_DEPENDENCY) {
-                    updateItemToRunList(gesturePref);
-                }
+            for (String gesturePref : PREF_LISTS_WITH_DEPENDENCY) {
+                updateItemToRunList(gesturePref);
             }
         }
         AsyncTask.execute(alwaysAsync);
@@ -227,10 +225,8 @@ public class SettingsActivity extends PreferenceActivity implements
         if (ItemToRunListContent == null) {
             AsyncTask.execute(() -> {
                 Pair<CharSequence[], CharSequence[]> content = generateItemToRunListContent(this);
-                synchronized (SettingsActivity.this) {
-                    if (ItemToRunListContent == null)
-                        ItemToRunListContent = content;
-                }
+                if (ItemToRunListContent == null)
+                    ItemToRunListContent = content;
                 runOnUiThread(updateLists);
             });
         } else {

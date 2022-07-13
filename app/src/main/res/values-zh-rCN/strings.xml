@@ -20,7 +20,7 @@
     <string name="main_clear">清空搜索栏</string>
     <string name="main_kiss">显示应用列表</string>
     <string name="main_kiss_back">显示历史记录</string>
-    <string name="app_name">KISS 启动器</string>
+    <string name="app_name">狐之吻</string>
     <string name="ui_item_search">%1$s 搜索“%2$s”</string>
     <string name="ui_item_phone">呼叫“%s”</string>
     <string name="ui_item_contact_hint_message">信息</string>
