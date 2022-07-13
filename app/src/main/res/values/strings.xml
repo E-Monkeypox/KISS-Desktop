@@ -331,4 +331,5 @@
     <string name="always_default_web_search_on_enter">Always trigger default web search provider on enter</string>
     <string name="sk_remove_data">Remove app data</string>
     <string name="sk_kill_process">Kill App Process</string>
+    <string name="sk_open_origin">Launch Origin App</string>
 </resources>

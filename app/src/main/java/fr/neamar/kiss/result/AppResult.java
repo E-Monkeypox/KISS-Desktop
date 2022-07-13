@@ -116,6 +116,17 @@ public class AppResult extends Result {
         return appPojo.getPackageKey();
     }
 
+    private void openOriginApp(Context context, String pkg)
+    {
+        try{
+            PackageManager pm = context.getPackageManager();
+            context.startActivity(pm.getLaunchIntentForPackage(pkg));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected ListPopup buildPopupMenu(Context context, ArrayAdapter<ListPopup.Item> adapter, final RecordAdapter parent, View parentView) {
         if (!(context instanceof MainActivity) || ((MainActivity) context).isViewingSearchResults()) {
@@ -133,6 +144,7 @@ public class AppResult extends Result {
         adapter.add(new ListPopup.Item(context, R.string.menu_app_store));
         adapter.add(new ListPopup.Item(context, R.string.sk_remove_data));
         adapter.add(new ListPopup.Item(context, R.string.sk_kill_process));
+        adapter.add(new ListPopup.Item(context, R.string.sk_open_origin));
 
         try {
             // app installed under /system can't be uninstalled
@@ -167,6 +179,9 @@ public class AppResult extends Result {
     @Override
     protected boolean popupMenuClickHandler(final Context context, final RecordAdapter parent, int stringId, View parentView) {
         switch (stringId) {
+            case R.string.sk_open_origin:
+                openOriginApp(context, appPojo.packageName);
+                return true;
             case R.string.sk_kill_process:
                 FozaActivityManager.get().killAppByPkg(appPojo.packageName);
                 return true;
