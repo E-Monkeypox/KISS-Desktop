@@ -501,7 +501,10 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             // (this will trigger a new event if the search bar was already empty)
             // (which means pressing back in minimalistic mode with history displayed
             // will hide history again)
-            searchEditText.setText("");
+            if (!searchEditText.getText().toString().isEmpty()) {
+                searchEditText.setText("");
+                return;
+            }
         }
 
         // Calling super.onBackPressed() will quit the launcher, only do this if KISS is not the user's default home.
