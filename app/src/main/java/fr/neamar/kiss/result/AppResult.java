@@ -151,14 +151,21 @@ public class AppResult extends Result {
         try {
             // app installed under /system can't be uninstalled
             boolean isSameProfile = true;
-            ApplicationInfo ai;
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ApplicationInfo ai = null;
+            if(FozaPackageManager.get().isInnerAppInstalled(appPojo.packageName))
+            {
+                ai = FozaPackageManager.get().getApplicationInfo(appPojo.packageName);
+            }
+            if (ai == null && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
                 LauncherApps launcher = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
                 LauncherActivityInfo info = launcher.getActivityList(this.appPojo.packageName, this.appPojo.userHandle.getRealHandle()).get(0);
                 ai = info.getApplicationInfo();
 
                 isSameProfile = this.appPojo.userHandle.isCurrentUser();
-            } else {
+            }
+            else if(ai == null)
+            {
                 ai = context.getPackageManager().getApplicationInfo(this.appPojo.packageName, 0);
             }
 
@@ -185,9 +192,16 @@ public class AppResult extends Result {
                 openOriginApp(context, appPojo.packageName);
                 return true;
             case R.string.sk_install_as_module:
-                FozaInnerAppInstaller.getInstance().installLocalPackage(
-                        appPojo.packageName, true, null
-                );
+                new Thread()
+                {
+                    @Override
+                    public void run() {
+                        super.run();
+                        FozaInnerAppInstaller.getInstance().installLocalPackage(
+                                appPojo.packageName, true, null
+                        );
+                    }
+                }.start();
                 return true;
             case R.string.sk_kill_process:
                 FozaActivityManager.get().killAppByPkg(appPojo.packageName);
@@ -447,6 +461,21 @@ public class AppResult extends Result {
      * Open an activity to uninstall the current package
      */
     private void launchUninstall(Context context, AppPojo app) {
+        if(FozaPackageManager.get().isInnerAppInstalled(app.packageName))
+        {
+            FozaPackageManager.get().uninstallAppFully(app.packageName);
+            try{
+                Toast.makeText(
+                        context,
+                        android.R.string.ok,
+                        Toast.LENGTH_SHORT
+                ).show();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            return;
+        }
         Intent intent = new Intent(Intent.ACTION_DELETE,
                 Uri.fromParts("package", app.packageName, null));
         context.startActivity(intent);
@@ -500,7 +529,7 @@ public class AppResult extends Result {
                 {
                     e.printStackTrace();
                 }
-                if(FozaPackageManager.get().getPackageInfo(className.getPackageName()) == null)
+                if(!FozaPackageManager.get().isInnerAppInstalled(className.getPackageName()))
                 {
                     FozaInnerAppInstaller
                             .getInstance()

@@ -548,6 +548,10 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
                 return true;
             case R.id.kill_all_apps:
                 FozaActivityManager.get().killAllApps();
+                return true;
+            case R.id.reload_apps:
+                System.exit(0);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
