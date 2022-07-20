@@ -1,4 +1,4 @@
-Qin Desktop
+Qin (Kiss) Desktop
 ======
 An Android launcher not spending time and memory on stuff you'd rather do.
 
@@ -20,8 +20,6 @@ _Browsing for apps is and should be secondary_.
 Telegram channel: https://t.me/emonkeypox
 
 You can order latest released in this channel.
-
-Public Telegram chat: https://t.me/black_boxing and origin desktop software chatroom: https://t.me/joinchat/_eDeAIQJU1FlNjM0
 
 Join the [origin desktop beta program](https://play.google.com/apps/testing/fr.neamar.kiss/) to test the latest version.
 
