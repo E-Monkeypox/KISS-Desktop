@@ -2,6 +2,12 @@ KISS
 ======
 An Android launcher not spending time and memory on stuff you'd rather do.
 
+For launch app, click app icon directly, app will launch as container mode.
+
+If you want to launch outside app, long click icon, and you can launch outside app.
+
+## For install Xposed module: Long press on module icon, click install as module, the module will take an effect automatic.
+
 [Copylefted](https://en.wikipedia.org/wiki/Copyleft) libre software, licensed [GPLv3+](https://github.com/Neamar/KISS/blob/master/LICENSE):
 
 Use, see, [change](CONTRIBUTING.md) and share at will; with all.
