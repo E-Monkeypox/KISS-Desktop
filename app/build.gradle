@@ -18,8 +18,8 @@ android {
         applicationId 'lu.die.kissfox'
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 194
-        versionName "3.16.8"
+        versionCode 196
+        versionName "3.16.10"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         splits {
             abi {
