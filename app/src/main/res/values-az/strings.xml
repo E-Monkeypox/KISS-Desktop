@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Fox başladıcı</string>
+    <string name="app_name">Desktop başladıcı</string>
     <string name="activity_setting">KISS parametrləri</string>
     <string name="ui_search_hint">Axtar: Proqramlar, kontaktlar, …</string>
     <string name="ui_item_search">%1$s Şunu axtar: \"%2$s\"</string>

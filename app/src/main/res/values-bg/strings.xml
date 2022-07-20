@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">KISS Fox</string>
+    <string name="app_name">KISS Desktop</string>
     <string name="activity_setting">KISS настройки</string>
     <string name="ui_search_hint">Потърси приложения, контакти, …</string>
     <string name="ui_item_phone">Обадете се на „%s“</string>

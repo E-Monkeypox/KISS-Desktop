@@ -219,7 +219,7 @@
     <string name="ui_item_search">Bilatu “%2$s” %1$s(e)n</string>
     <string name="ui_search_hint">Bilatu aplikazioak, kontaktuak…</string>
     <string name="activity_setting">KISS ezarpenak</string>
-    <string name="app_name">Fox abiarazlea</string>
+    <string name="app_name">Desktop abiarazlea</string>
     <string name="theme_separator">Emaitza-bereizlea</string>
     <string name="theme_customize_default">Lehenetsitako gaia</string>
     <string name="theme_light">Argia</string>

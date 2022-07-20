@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">مشغل Fox</string>
+    <string name="app_name">مشغل Desktop</string>
     <string name="activity_setting">إعدادات KISS</string>
     <string name="ui_search_hint">بحث عن التطبيقات، وجهات الاتصال، …</string>
     <string name="ui_item_search">%1$s البحث عن \"%2$s\"</string>

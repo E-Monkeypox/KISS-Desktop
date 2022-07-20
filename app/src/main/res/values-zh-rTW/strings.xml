@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">狐之吻X</string>
+    <string name="app_name">亲亲桌面X</string>
     <string name="activity_setting">KISS 設定</string>
     <string name="ui_search_hint">搜尋程式，聯絡人，…</string>
     <string name="ui_item_search">%1$s 搜尋“%2$s”</string>
