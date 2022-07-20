@@ -56,6 +56,7 @@ android {
 }
 
 dependencies {
+    implementation project(':engine_pox_stub')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation fileTree(include: ['*.aar'], dir: 'libs')
     implementation 'com.jakewharton.android.repackaged:dalvik-dx:11.0.0_r3'
