@@ -1,8 +1,6 @@
 package fr.neamar.kiss.result;
 
-import android.app.ActivityOptions;
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Rect;
@@ -49,6 +48,9 @@ import fr.neamar.kiss.ui.GoogleCalendarIcon;
 import fr.neamar.kiss.ui.ListPopup;
 import fr.neamar.kiss.utils.FuzzyScore;
 import fr.neamar.kiss.utils.SpaceTokenizer;
+import lu.die.foza.SuperAPI.FozaInnerAppInstaller;
+import lu.die.fozacompatibility.FozaActivityManager;
+import lu.die.fozacompatibility.FozaPackageManager;
 
 public class AppResult extends Result {
     private final AppPojo appPojo;
@@ -115,6 +117,17 @@ public class AppResult extends Result {
         return appPojo.getPackageKey();
     }
 
+    private void openOriginApp(Context context, String pkg)
+    {
+        try{
+            PackageManager pm = context.getPackageManager();
+            context.startActivity(pm.getLaunchIntentForPackage(pkg));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected ListPopup buildPopupMenu(Context context, ArrayAdapter<ListPopup.Item> adapter, final RecordAdapter parent, View parentView) {
         if (!(context instanceof MainActivity) || ((MainActivity) context).isViewingSearchResults()) {
@@ -130,18 +143,29 @@ public class AppResult extends Result {
         adapter.add(new ListPopup.Item(context, R.string.menu_tags_edit));
         adapter.add(new ListPopup.Item(context, R.string.menu_app_details));
         adapter.add(new ListPopup.Item(context, R.string.menu_app_store));
+        adapter.add(new ListPopup.Item(context, R.string.sk_remove_data));
+        adapter.add(new ListPopup.Item(context, R.string.sk_kill_process));
+        adapter.add(new ListPopup.Item(context, R.string.sk_open_origin));
+        adapter.add(new ListPopup.Item(context, R.string.sk_install_as_module));
 
         try {
             // app installed under /system can't be uninstalled
             boolean isSameProfile = true;
-            ApplicationInfo ai;
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ApplicationInfo ai = null;
+            if(FozaPackageManager.get().isInnerAppInstalled(appPojo.packageName))
+            {
+                ai = FozaPackageManager.get().getApplicationInfo(appPojo.packageName);
+            }
+            if (ai == null && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
                 LauncherApps launcher = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
                 LauncherActivityInfo info = launcher.getActivityList(this.appPojo.packageName, this.appPojo.userHandle.getRealHandle()).get(0);
                 ai = info.getApplicationInfo();
 
                 isSameProfile = this.appPojo.userHandle.isCurrentUser();
-            } else {
+            }
+            else if(ai == null)
+            {
                 ai = context.getPackageManager().getApplicationInfo(this.appPojo.packageName, 0);
             }
 
@@ -164,6 +188,28 @@ public class AppResult extends Result {
     @Override
     protected boolean popupMenuClickHandler(final Context context, final RecordAdapter parent, int stringId, View parentView) {
         switch (stringId) {
+            case R.string.sk_open_origin:
+                openOriginApp(context, appPojo.packageName);
+                return true;
+            case R.string.sk_install_as_module:
+                new Thread()
+                {
+                    @Override
+                    public void run() {
+                        super.run();
+                        FozaInnerAppInstaller.getInstance().installLocalPackage(
+                                appPojo.packageName, true, null
+                        );
+                    }
+                }.start();
+                return true;
+            case R.string.sk_kill_process:
+                FozaActivityManager.get().killAppByPkg(appPojo.packageName);
+                return true;
+            case R.string.sk_remove_data:
+                FozaActivityManager.get().killAppByPkg(appPojo.packageName);
+                FozaPackageManager.get().uninstallAppFully(appPojo.packageName);
+                return true;
             case R.string.menu_app_details:
                 launchAppDetails(context, appPojo);
                 return true;
@@ -415,6 +461,21 @@ public class AppResult extends Result {
      * Open an activity to uninstall the current package
      */
     private void launchUninstall(Context context, AppPojo app) {
+        if(FozaPackageManager.get().isInnerAppInstalled(app.packageName))
+        {
+            FozaPackageManager.get().uninstallAppFully(app.packageName);
+            try{
+                Toast.makeText(
+                        context,
+                        android.R.string.ok,
+                        Toast.LENGTH_SHORT
+                ).show();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            return;
+        }
         Intent intent = new Intent(Intent.ACTION_DELETE,
                 Uri.fromParts("package", app.packageName, null));
         context.startActivity(intent);
@@ -448,48 +509,35 @@ public class AppResult extends Result {
 
     @Override
     public void doLaunch(Context context, View v) {
-        try {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                LauncherApps launcher = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-                assert launcher != null;
-                Rect sourceBounds = null;
-                Bundle opts = null;
-
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    // We're on a modern Android and can display activity animations
-                    // If AppResult, find the icon
-                    View potentialIcon = v.findViewById(R.id.item_app_icon);
-                    if (potentialIcon == null) {
-                        // If favorite, find the icon
-                        potentialIcon = v.findViewById(R.id.favorite);
+        new Thread()
+        {
+            @Override
+            public void run() {
+                super.run();
+                try{
+                    PackageManager packageManager = context.getPackageManager();
+                    PackageInfo info = packageManager.getPackageInfo(appPojo.packageName, 0);
+                    if((info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                    {
+                        context.startActivity(
+                                packageManager.getLaunchIntentForPackage(appPojo.packageName)
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        );
+                        return;
                     }
-
-                    if (potentialIcon != null) {
-                        sourceBounds = getViewBounds(potentialIcon);
-
-                        // If we got an icon, we create options to get a nice animation
-                        opts = ActivityOptions.makeClipRevealAnimation(potentialIcon, 0, 0, potentialIcon.getMeasuredWidth(), potentialIcon.getMeasuredHeight()).toBundle();
-                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
-
-                launcher.startMainActivity(className, appPojo.userHandle.getRealHandle(), sourceBounds, opts);
-            } else {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                intent.setComponent(className);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    intent.setSourceBounds(getViewBounds(v));
+                if(!FozaPackageManager.get().isInnerAppInstalled(className.getPackageName()))
+                {
+                    FozaInnerAppInstaller
+                            .getInstance()
+                            .installLocalPackage(className.getPackageName(), false, null);
                 }
-
-                context.startActivity(intent);
+                FozaActivityManager.get().launchApp(className.getPackageName());
             }
-        } catch (ActivityNotFoundException | NullPointerException | SecurityException e) {
-            // Application was just removed?
-            // (null pointer exception can be thrown on Lollipop+ when app is missing)
-            Toast.makeText(context, R.string.application_not_found, Toast.LENGTH_LONG).show();
-        }
+        }.start();
     }
 
     private Rect getViewBounds(View v) {

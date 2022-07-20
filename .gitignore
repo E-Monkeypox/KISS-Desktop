@@ -126,3 +126,4 @@ docs/_site
 fastlane/Appfile
 fastlane/report.xml
 app/release/
+/app/libs/

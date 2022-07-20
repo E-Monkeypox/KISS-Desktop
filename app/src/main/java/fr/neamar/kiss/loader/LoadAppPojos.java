@@ -2,6 +2,7 @@ package fr.neamar.kiss.loader;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
@@ -13,6 +14,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import fr.neamar.kiss.KissApplication;
@@ -21,6 +24,7 @@ import fr.neamar.kiss.db.AppRecord;
 import fr.neamar.kiss.db.DBHelper;
 import fr.neamar.kiss.pojo.AppPojo;
 import fr.neamar.kiss.utils.UserHandle;
+import lu.die.fozacompatibility.FozaPackageManager;
 
 public class LoadAppPojos extends LoadPojos<AppPojo> {
 
@@ -45,6 +49,10 @@ public class LoadAppPojos extends LoadPojos<AppPojo> {
         Set<String> excludedAppList = KissApplication.getApplication(ctx).getDataHandler().getExcluded();
         Set<String> excludedAppListFavorites = KissApplication.getApplication(ctx).getDataHandler().getExcludedFavorites();
         Set<String> excludedFromHistoryAppList = KissApplication.getApplication(ctx).getDataHandler().getExcludedFromHistory();
+        Set<String> addedLocalApp = new HashSet<>();
+
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             UserManager manager = (UserManager) ctx.getSystemService(Context.USER_SERVICE);
@@ -65,6 +73,8 @@ public class LoadAppPojos extends LoadPojos<AppPojo> {
                     AppPojo app = new AppPojo(id, appInfo.packageName, activityInfo.getName(), user,
                             isExcluded, isExcludedFromHistory);
 
+                    addedLocalApp.add(appInfo.packageName);
+
                     app.setName(activityInfo.getLabel().toString());
 
                     app.setTags(tagsHandler.getTags(app.id));
@@ -74,9 +84,6 @@ public class LoadAppPojos extends LoadPojos<AppPojo> {
             }
         } else {
             PackageManager manager = ctx.getPackageManager();
-
-            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
             for (ResolveInfo info : manager.queryIntentActivities(mainIntent, 0)) {
                 ApplicationInfo appInfo = info.activityInfo.applicationInfo;
@@ -90,10 +97,33 @@ public class LoadAppPojos extends LoadPojos<AppPojo> {
                 AppPojo app = new AppPojo(id, appInfo.packageName, info.activityInfo.name, new UserHandle(),
                         isExcluded, isExcludedFromHistory);
 
+                addedLocalApp.add(appInfo.packageName);
+
                 app.setName(info.loadLabel(manager).toString());
 
                 app.setTags(tagsHandler.getTags(app.id));
 
+                apps.add(app);
+            }
+        }
+
+        List<ResolveInfo> packageInfoList = FozaPackageManager.get().queryIntentActivities(mainIntent, null, PackageManager.MATCH_ALL, 0);
+        PackageManager manager = ctx.getPackageManager();
+        if(packageInfoList != null)
+        {
+            for(ResolveInfo oneResolveInfo : packageInfoList)
+            {
+                ActivityInfo oneActivityInfo = oneResolveInfo.activityInfo;
+                if(oneActivityInfo == null) continue;
+                if(addedLocalApp.contains(oneActivityInfo.packageName)) continue;
+                ApplicationInfo appInfo = oneActivityInfo.applicationInfo;
+                if(appInfo == null) continue;
+                String id = pojoScheme + appInfo.packageName + "/" + oneActivityInfo.name;
+                AppPojo app = new AppPojo(id, appInfo.packageName, oneActivityInfo.name, new UserHandle(),
+                        false, false);
+                addedLocalApp.add(appInfo.packageName);
+                app.setName(oneActivityInfo.loadLabel(manager).toString());
+                app.setTags(tagsHandler.getTags(app.id));
                 apps.add(app);
             }
         }

@@ -1,5 +1,7 @@
 package fr.neamar.kiss;
 
+import static android.view.HapticFeedbackConstants.LONG_PRESS;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
@@ -63,8 +65,8 @@ import fr.neamar.kiss.ui.SearchEditText;
 import fr.neamar.kiss.utils.PackageManagerUtils;
 import fr.neamar.kiss.utils.Permission;
 import fr.neamar.kiss.utils.SystemUiVisibilityHelper;
-
-import static android.view.HapticFeedbackConstants.LONG_PRESS;
+import lu.die.foza.SuperAPI.FozaCore;
+import lu.die.fozacompatibility.FozaActivityManager;
 
 public class MainActivity extends Activity implements QueryInterface, KeyboardScrollHider.KeyboardHandler, View.OnTouchListener {
 
@@ -376,11 +378,12 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         if(getResources().getConfiguration().keyboard == Configuration.KEYBOARD_QWERTY || getResources().getConfiguration().keyboard == Configuration.KEYBOARD_12KEY) {
             searchEditText.requestFocus();
         }
-
         /*
          * Defer everything else to the forwarders
          */
         forwarderManager.onCreate();
+
+        FozaCore.get().registerCoreCallback(() -> FozaActivityManager.get().acquirePreloadNextProcess());
     }
 
     @Override
@@ -489,14 +492,19 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     public void onBackPressed() {
         if (mPopup != null) {
             mPopup.dismiss();
+            return;
         } else if (isViewingAllApps()) {
             displayKissBar(false);
+            return;
         } else {
             // If no kissmenu, empty the search bar
             // (this will trigger a new event if the search bar was already empty)
             // (which means pressing back in minimalistic mode with history displayed
             // will hide history again)
-            searchEditText.setText("");
+            if (!searchEditText.getText().toString().isEmpty()) {
+                searchEditText.setText("");
+                return;
+            }
         }
 
         // Calling super.onBackPressed() will quit the launcher, only do this if KISS is not the user's default home.
@@ -537,6 +545,12 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
                 return true;
             case R.id.preferences:
                 startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.kill_all_apps:
+                FozaActivityManager.get().killAllApps();
+                return true;
+            case R.id.reload_apps:
+                System.exit(0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

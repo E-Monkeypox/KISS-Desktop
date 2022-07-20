@@ -18,7 +18,7 @@
         android:background="?attr/appSelectableItemBackground"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
-        tools:src="@drawable/ic_launcher" />
+        tools:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@android:id/text1"
