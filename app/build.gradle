@@ -60,7 +60,7 @@ dependencies {
     implementation fileTree(include: ['*.aar'], dir: 'libs')
     implementation 'com.jakewharton.android.repackaged:dalvik-dx:11.0.0_r3'
     implementation "com.belerweb:pinyin4j:2.5.1"
-    implementation "androidx.annotation:annotation:1.4.0"
+    implementation 'androidx.core:core-ktx:1.9.0-alpha05'
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
