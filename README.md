@@ -1,4 +1,4 @@
-KISS
+KISS Desktop
 ======
 An Android launcher not spending time and memory on stuff you'd rather do.
 
@@ -26,7 +26,7 @@ _Browsing for apps is and should be secondary_.
 
 Join the [beta program](https://play.google.com/apps/testing/fr.neamar.kiss/) to test the latest version.
 
-Public Telegram chat: https://t.me/joinchat/_eDeAIQJU1FlNjM0
+Public Telegram chat: https://t.me/black_boxing and origin desktop software chatroom: https://t.me/joinchat/_eDeAIQJU1FlNjM0
 
 |![Less interface](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Search anything](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) | ![Customize everything](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) |![Settings](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png) |
 |:-------------------:|:------------------------:|:-----------------:|:-----------------:|
