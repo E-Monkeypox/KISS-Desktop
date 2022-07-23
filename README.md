@@ -21,7 +21,7 @@ Telegram channel: https://t.me/emonkeypox
 
 You can order latest released in this channel.
 
-Join the [origin desktop beta program](https://play.google.com/apps/testing/fr.neamar.kiss/) to test the latest version.
+Join the [Telegram Chat Room](https://t.me/emonkeypoxchat) to test the latest app launcher version.
 
 |![Less interface](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Search anything](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) | ![Customize everything](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) |![Settings](https://raw.githubusercontent.com/Neamar/KISS/master/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png) |
 |:-------------------:|:------------------------:|:-----------------:|:-----------------:|
