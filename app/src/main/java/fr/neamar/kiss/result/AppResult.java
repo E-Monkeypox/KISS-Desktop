@@ -46,6 +46,7 @@ import fr.neamar.kiss.notification.NotificationListener;
 import fr.neamar.kiss.pojo.AppPojo;
 import fr.neamar.kiss.ui.GoogleCalendarIcon;
 import fr.neamar.kiss.ui.ListPopup;
+import fr.neamar.kiss.utils.DialogBuilderUtils;
 import fr.neamar.kiss.utils.FuzzyScore;
 import fr.neamar.kiss.utils.SpaceTokenizer;
 import lu.die.foza.SuperAPI.FozaInnerAppInstaller;
@@ -147,6 +148,7 @@ public class AppResult extends Result {
         adapter.add(new ListPopup.Item(context, R.string.sk_kill_process));
         adapter.add(new ListPopup.Item(context, R.string.sk_open_origin));
         adapter.add(new ListPopup.Item(context, R.string.sk_install_as_module));
+        adapter.add(new ListPopup.Item(context, R.string.sk_select_user_to_run));
 
         try {
             // app installed under /system can't be uninstalled
@@ -185,9 +187,39 @@ public class AppResult extends Result {
         return inflatePopupMenu(adapter, context);
     }
 
+    private void selUserToRun(Context context)
+    {
+        try{
+            DialogBuilderUtils.collectAppDetailForLaunchMultipleUser(
+                    context, s -> {
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                super.run();
+                                if(!FozaPackageManager.get().isInnerAppInstalled(className.getPackageName()))
+                                {
+                                    FozaInnerAppInstaller
+                                            .getInstance()
+                                            .installLocalPackage(className.getPackageName(), false, null);
+                                }
+                                FozaActivityManager.get().launchApp(s, className.getPackageName());
+                            }
+                        }.start();
+                        return null;
+                    }
+            );
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected boolean popupMenuClickHandler(final Context context, final RecordAdapter parent, int stringId, View parentView) {
         switch (stringId) {
+            case R.string.sk_select_user_to_run:
+                selUserToRun(context);
+                break;
             case R.string.sk_open_origin:
                 openOriginApp(context, appPojo.packageName);
                 return true;

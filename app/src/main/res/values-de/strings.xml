@@ -315,4 +315,10 @@
     <string name="ui_item_open"> “%1$s” öffnen</string>
     <string name="excluded_apps_toggle">Zeige ausgeblendete Apps in der Suche</string>
     <string name="gesture_launch_pojo">Starte…</string>
+    <string name="sk_select_user_to_run">Benutzer zum Öffnen auswählen</string>
+    <string name="sk_reload_launcher">Alle Apps neu starten</string>
+    <string name="sk_kill_all_apps">alle Apps neu starten</string>
+    <string name="sk_install_as_module">Als Modul installieren</string>
+    <string name="sk_open_origin">Starten Sie externe Anwendungen</string>
+    <string name="sk_kill_process">Töte alle Hintergründe</string>
 </resources>
