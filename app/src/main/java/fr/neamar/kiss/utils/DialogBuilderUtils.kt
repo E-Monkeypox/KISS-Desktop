@@ -11,6 +11,7 @@ object DialogBuilderUtils {
         try{
             val builder = AlertDialog.Builder(context)
             val textArea = EditText(context)
+            textArea.hint = "Geben Sie den zu aktivierenden Benutzernamen ein..."
             builder.setTitle("Benutzerauswahl")
             builder.setPositiveButton("Anlaufen") {
                 _, _ ->
