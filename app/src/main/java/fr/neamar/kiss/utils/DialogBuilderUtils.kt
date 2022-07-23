@@ -13,11 +13,11 @@ object DialogBuilderUtils {
             val textArea = EditText(context)
             textArea.hint = "Geben Sie den zu aktivierenden Benutzernamen ein..."
             builder.setTitle("Benutzerauswahl")
-            builder.setPositiveButton("Anlaufen") {
+            builder.setPositiveButton("Start-up") {
                 _, _ ->
                 callback(textArea.text?.toString() ?: "Standardbenutzer")
             }
-            builder.setNegativeButton("Absagen"){_,_->}
+            builder.setNegativeButton("Abbrechen"){_,_->}
             builder.setView(textArea)
             builder.show()
         }catch (e : Exception)
