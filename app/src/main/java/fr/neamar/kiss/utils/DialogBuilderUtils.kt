@@ -5,6 +5,7 @@ import android.content.Context
 import android.widget.EditText
 
 object DialogBuilderUtils {
+    private val sPattern = Regex("[^(A-Za-z0-9)]")
     @JvmStatic
     fun collectAppDetailForLaunchMultipleUser(context: Context, callback : (String)->Unit)
     {
@@ -15,7 +16,13 @@ object DialogBuilderUtils {
             builder.setTitle("Benutzerauswahl")
             builder.setPositiveButton("Start-up") {
                 _, _ ->
-                callback(textArea.text?.toString() ?: "Standardbenutzer")
+                val szInputted = (textArea.text?.toString() ?: "Standardbenutzer")
+                        .replace(sPattern, "")
+                if(szInputted.isBlank())
+                {
+                    return@setPositiveButton
+                }
+                callback(szInputted)
             }
             builder.setNegativeButton("Abbrechen"){_,_->}
             builder.setView(textArea)

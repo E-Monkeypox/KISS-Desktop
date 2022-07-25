@@ -17,6 +17,7 @@ public class ForwarderManager extends Forwarder {
     private final OreoShortcuts shortcutsForwarder;
     private final TagsMenu tagsMenu;
     private final Notification notificationForwarder;
+    private final AmySantaTaskProcessor amySantaTaskProcessor;
 
 
     public ForwarderManager(MainActivity mainActivity) {
@@ -30,6 +31,7 @@ public class ForwarderManager extends Forwarder {
         this.shortcutsForwarder = new OreoShortcuts(mainActivity);
         this.notificationForwarder = new Notification(mainActivity);
         this.tagsMenu = new TagsMenu(mainActivity);
+        this.amySantaTaskProcessor = new AmySantaTaskProcessor(mainActivity);
     }
 
     public void onCreate() {
@@ -66,6 +68,7 @@ public class ForwarderManager extends Forwarder {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         widgetsForwarder.onActivityResult(requestCode, resultCode, data);
+        amySantaTaskProcessor.onActivityResult(requestCode, resultCode, data);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -101,6 +104,11 @@ public class ForwarderManager extends Forwarder {
 
     public void onDisplayKissBar(boolean display) {
         experienceTweaks.onDisplayKissBar(display);
+    }
+
+    public void installPackageAsUser()
+    {
+        amySantaTaskProcessor.dealSelectApk();
     }
 
     public boolean onMenuButtonClicked(View menuButton) {

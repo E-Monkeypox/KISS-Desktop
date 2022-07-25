@@ -336,4 +336,5 @@
     <string name="sk_kill_all_apps">Kill All Apps</string>
     <string name="sk_reload_launcher">Reload All Apps</string>
     <string name="sk_select_user_to_run">Select User To Run</string>
+    <string name="nya_install_by_file_explorer">Install App From File Explorer</string>
 </resources>
