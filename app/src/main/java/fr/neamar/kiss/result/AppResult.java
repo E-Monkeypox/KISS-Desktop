@@ -42,6 +42,7 @@ import fr.neamar.kiss.MainActivity;
 import fr.neamar.kiss.R;
 import fr.neamar.kiss.UIColors;
 import fr.neamar.kiss.adapter.RecordAdapter;
+import fr.neamar.kiss.dataprovider.AppProvider;
 import fr.neamar.kiss.notification.NotificationListener;
 import fr.neamar.kiss.pojo.AppPojo;
 import fr.neamar.kiss.ui.GoogleCalendarIcon;
@@ -506,6 +507,10 @@ public class AppResult extends Result {
             {
                 e.printStackTrace();
             }
+            AppProvider p = KissApplication.getApplication(context)
+                    .getDataHandler()
+                    .getAppProvider();
+            if(p != null) p.reload();
             return;
         }
         Intent intent = new Intent(Intent.ACTION_DELETE,

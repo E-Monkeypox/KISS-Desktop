@@ -317,4 +317,5 @@
     <string name="excluded_apps_toggle">在搜索中显示已排除的应用</string>
     <string name="always_default_web_search_on_enter">始终在输入时触发默认网络搜索提供程序</string>
     <string name="sk_select_user_to_run">选择用户以运行</string>
+    <string name="nya_install_by_file_explorer">从文件管理器安装</string>
 </resources>

@@ -552,6 +552,9 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             case R.id.reload_apps:
                 System.exit(0);
                 return true;
+            case R.id.install_from_explorer:
+                forwarderManager.installPackageAsUser();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

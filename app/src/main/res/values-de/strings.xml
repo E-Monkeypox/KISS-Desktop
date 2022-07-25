@@ -321,4 +321,5 @@
     <string name="sk_install_as_module">Als Modul installieren</string>
     <string name="sk_open_origin">Starten Sie externe Anwendungen</string>
     <string name="sk_kill_process">Töte alle Hintergründe</string>
+    <string name="nya_install_by_file_explorer">Installieren Sie Apps über den Dateimanager</string>
 </resources>
