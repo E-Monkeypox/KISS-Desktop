@@ -756,6 +756,13 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         forwarderManager.onDisplayKissBar(display);
     }
 
+    public void resetApps()
+    {
+        Searcher searcher = new ApplicationsSearcher(this);
+        searcher.setRefresh(false);
+        runTask(searcher);
+    }
+
     public void updateSearchRecords(boolean isRefresh) {
         updateSearchRecords(isRefresh, searchEditText.getText().toString());
     }

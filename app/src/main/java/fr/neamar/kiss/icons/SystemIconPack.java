@@ -2,6 +2,7 @@ package fr.neamar.kiss.icons;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
@@ -19,6 +20,7 @@ import java.util.List;
 import fr.neamar.kiss.ui.GoogleCalendarIcon;
 import fr.neamar.kiss.utils.DrawableUtils;
 import fr.neamar.kiss.utils.UserHandle;
+import lu.die.fozacompatibility.FozaPackageManager;
 
 public class SystemIconPack implements IconPack<Void> {
 
@@ -58,6 +60,21 @@ public class SystemIconPack implements IconPack<Void> {
         return null;
     }
 
+    private Drawable fetchInnerAppIcon(String pkg, Context context)
+    {
+        try{
+            if(FozaPackageManager.get().isInnerAppInstalled(pkg))
+            {
+                ApplicationInfo info = FozaPackageManager.get().getApplicationInfo(pkg);
+                return info.loadIcon(context.getPackageManager());
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Nullable
     @Override
     public Drawable getComponentDrawable(@NonNull Context ctx, @NonNull ComponentName componentName, @NonNull UserHandle userHandle) {
@@ -90,8 +107,12 @@ public class SystemIconPack implements IconPack<Void> {
             } else {
                 drawable = ctx.getPackageManager().getActivityIcon(componentName);
             }
-        } catch (PackageManager.NameNotFoundException | IndexOutOfBoundsException e) {
-            Log.e(TAG, "Unable to find component " + componentName.toShortString(), e);
+        } catch (Exception ignored) {
+        }
+
+        if(drawable == null && FozaPackageManager.get().isInnerAppInstalled(componentName.getPackageName()))
+        {
+            drawable = fetchInnerAppIcon(componentName.getPackageName(), ctx);
         }
 
         // This should never happen, let's just return the application icon

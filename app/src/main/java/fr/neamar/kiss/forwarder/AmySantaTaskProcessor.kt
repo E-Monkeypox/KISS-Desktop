@@ -63,16 +63,23 @@ private class AmySantaTaskProcessor(mainActivity: MainActivity) : Forwarder(main
                 run {
                     try{
                         installAppByStream(uri)
-                        KissApplication.getApplication(mainActivity)
+                        Thread.sleep(3000)
+                        val dataHandler = KissApplication
+                                .getApplication(mainActivity)
                                 .dataHandler
-                                .appProvider
-                                ?.reload()
+                        dataHandler.appProvider?.reload()
                         mainActivity.runOnUiThread {
-                            Toast.makeText(
-                                    mainActivity,
-                                    "Bereits installiert.",
-                                    Toast.LENGTH_SHORT
-                            ).show()
+                            try{
+                                mainActivity.resetApps()
+                                Toast.makeText(
+                                        mainActivity,
+                                        "Bereits installiert.",
+                                        Toast.LENGTH_SHORT
+                                ).show()
+                            }catch (e : Exception)
+                            {
+                                e.printStackTrace()
+                            }
                         }
                     }catch (e : Exception)
                     {
