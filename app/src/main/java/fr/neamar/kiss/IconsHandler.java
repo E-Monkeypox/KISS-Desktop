@@ -35,6 +35,7 @@ import fr.neamar.kiss.result.AppResult;
 import fr.neamar.kiss.utils.DrawableUtils;
 import fr.neamar.kiss.utils.UserHandle;
 import fr.neamar.kiss.utils.Utilities;
+import lu.die.fozacompatibility.FozaPackageManager;
 
 /**
  * Inspired from http://stackoverflow.com/questions/31490630/how-to-load-icon-from-icon-pack
@@ -137,6 +138,21 @@ public class IconsHandler {
         }
     }
 
+    private Drawable fetchInnerAppIcon(String pkg)
+    {
+        try{
+            if(FozaPackageManager.get().isInnerAppInstalled(pkg))
+            {
+                ApplicationInfo info = FozaPackageManager.get().getApplicationInfo(pkg);
+                return info.loadIcon(pm);
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     /**
      * Get or generate icon for an app
@@ -165,7 +181,7 @@ public class IconsHandler {
         if (drawable == null && mIconPack != null && userHandle.isCurrentUser()) {
             // just checking will make this thread wait for the icon pack to load
             if (!mIconPack.isLoaded())
-                return null;
+                return fetchInnerAppIcon(componentName.getPackageName());
             drawable = mIconPack.getComponentDrawable(ctx, componentName, userHandle);
         }
 
@@ -174,7 +190,7 @@ public class IconsHandler {
             drawable = mSystemPack.getComponentDrawable(ctx, componentName, userHandle);
         }
         if (drawable == null)
-            return null;
+            return fetchInnerAppIcon(componentName.getPackageName());
 
         Drawable drawableWithBackgroundAndMask = applyIconMask(ctx, drawable, userHandle);
         storeDrawable(cacheGetFileName(cacheKey), drawableWithBackgroundAndMask);

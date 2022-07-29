@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.content.pm.ShortcutInfo;
@@ -42,6 +43,7 @@ import fr.neamar.kiss.utils.FuzzyScore;
 import fr.neamar.kiss.utils.PackageManagerUtils;
 import fr.neamar.kiss.utils.ShortcutUtil;
 import fr.neamar.kiss.utils.SpaceTokenizer;
+import lu.die.fozacompatibility.FozaPackageManager;
 
 public class ShortcutsResult extends Result {
 
@@ -52,6 +54,21 @@ public class ShortcutsResult extends Result {
     ShortcutsResult(ShortcutPojo shortcutPojo) {
         super(shortcutPojo);
         this.shortcutPojo = shortcutPojo;
+    }
+
+    private Drawable fetchInnerAppIcon(String pkg, Context context)
+    {
+        try{
+            if(FozaPackageManager.get().isInnerAppInstalled(pkg))
+            {
+                ApplicationInfo info = FozaPackageManager.get().getApplicationInfo(pkg);
+                return info.loadIcon(context.getPackageManager());
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @NonNull
@@ -115,6 +132,10 @@ public class ShortcutsResult extends Result {
                         appDrawable = iconsHandler.applyIconMask(context, appDrawable, new fr.neamar.kiss.utils.UserHandle());
                 } catch (PackageManager.NameNotFoundException e) {
                     Log.e(TAG, "Unable to find package " + shortcutPojo.packageName, e);
+                }
+                if(appDrawable == null && FozaPackageManager.get().isInnerAppInstalled(shortcutPojo.packageName))
+                {
+                    appDrawable = fetchInnerAppIcon(shortcutPojo.packageName, context);
                 }
             }
 
