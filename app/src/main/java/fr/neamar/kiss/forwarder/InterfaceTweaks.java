@@ -1,5 +1,6 @@
 package fr.neamar.kiss.forwarder;
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
+import androidx.annotation.StyleableRes;
 
 import java.util.List;
 
@@ -47,7 +50,21 @@ class InterfaceTweaks extends Forwarder {
 
         UIColors.applyOverlay(mainActivity, prefs);
 
-        mainActivity.getTheme().applyStyle(prefs.getBoolean("small-results", false) ? R.style.OverlayResultSizeSmall : R.style.OverlayResultSizeStandard, true);
+        switch (prefs.getString("results-size", "")) {
+            case "smallest":
+                mainActivity.getTheme().applyStyle(R.style.OverlayResultSizeSmallest, true);
+                break;
+            case "small":
+                mainActivity.getTheme().applyStyle(R.style.OverlayResultSizeSmall, true);
+                break;
+            case "medium":
+                mainActivity.getTheme().applyStyle(R.style.OverlayResultSizeMedium, true);
+                break;
+            case "default":
+            default:
+                mainActivity.getTheme().applyStyle(R.style.OverlayResultSizeStandard, true);
+                break;
+        }
     }
 
     void onCreate() {
@@ -217,6 +234,7 @@ class InterfaceTweaks extends Forwarder {
 
     private int getSearchBackgroundColor() {
         // get theme shadow color
+        @SuppressLint("ResourceType") @StyleableRes
         int[] attrs = new int[]{R.attr.searchBackgroundColor /* index 0 */};
         TypedArray ta = mainActivity.obtainStyledAttributes(attrs);
         int shadowColor = ta.getColor(0, Color.BLACK);
