@@ -150,6 +150,7 @@ public class AppResult extends Result {
         adapter.add(new ListPopup.Item(context, R.string.sk_open_origin));
         adapter.add(new ListPopup.Item(context, R.string.sk_install_as_module));
         adapter.add(new ListPopup.Item(context, R.string.sk_select_user_to_run));
+        adapter.add(new ListPopup.Item(context, R.string.nya_sk_user_selection));
 
         try {
             // app installed under /system can't be uninstalled
@@ -215,9 +216,20 @@ public class AppResult extends Result {
         }
     }
 
+    private void createUserDialogToLaunch(Context context)
+    {
+        DialogBuilderUtils.collectAndBuildUsersSelectionDialog(
+                context,
+                className.getPackageName()
+        );
+    }
+
     @Override
     protected boolean popupMenuClickHandler(final Context context, final RecordAdapter parent, int stringId, View parentView) {
         switch (stringId) {
+            case R.string.nya_sk_user_selection:
+                createUserDialogToLaunch(context);
+                break;
             case R.string.sk_select_user_to_run:
                 selUserToRun(context);
                 break;

@@ -315,6 +315,7 @@
     <string name="shape_teardrop_random">隨機淚滴型</string>
     <string name="shape_hexagon">六邊形</string>
     <string name="shape_app">應用程式形狀</string>
-    <string name="sk_select_user_to_run">選擇用戶打開</string>
+    <string name="sk_select_user_to_run">創建新用戶且運行</string>
     <string name="nya_install_by_file_explorer">從文件管理器安裝程式</string>
+    <string name="nya_sk_user_selection">選擇一個名去啓動</string>
 </resources>
