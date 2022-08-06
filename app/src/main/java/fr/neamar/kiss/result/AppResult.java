@@ -47,6 +47,7 @@ import fr.neamar.kiss.notification.NotificationListener;
 import fr.neamar.kiss.pojo.AppPojo;
 import fr.neamar.kiss.ui.GoogleCalendarIcon;
 import fr.neamar.kiss.ui.ListPopup;
+import fr.neamar.kiss.utils.Bit64Utils;
 import fr.neamar.kiss.utils.DialogBuilderUtils;
 import fr.neamar.kiss.utils.FuzzyScore;
 import fr.neamar.kiss.utils.SpaceTokenizer;
@@ -585,6 +586,25 @@ public class AppResult extends Result {
                             .installLocalPackage(className.getPackageName(), false, null);
                 }
                 FozaActivityManager.get().launchApp(className.getPackageName());
+                try{
+                    if(context instanceof android.app.Activity)
+                    {
+                        ApplicationInfo info = FozaPackageManager
+                                .get()
+                                .getApplicationInfo(className.getPackageName());
+                        if(!Bit64Utils.supportApp(info))
+                        {
+                            ((android.app.Activity)context).runOnUiThread(()->
+                                    Toast.makeText(context,
+                                            "Nicht unterstützte app, " +
+                                                    "bitte verwenden sie die 64 bit version!",
+                                            Toast.LENGTH_LONG).show());
+                        }
+                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         }.start();
     }
