@@ -15,8 +15,15 @@ Reconfigure you project with Application node like this:
 Then, add those code to application's attachBaseContext function, like:
 
 ```
-            FozaCore.get().startup(base)
-			or FozaActivityManager.get().initialize(base)
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        FozaCore.get().startup(base)
+    }
+    void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        FozaCore.get().startup(base);
+    }
+    FozaCore.get().startup(base) can be replaced with FozaActivityManager.get().initialize(base)
 ```
 After configurated, you can launch or control app.  
 You can launch app through package name and user name, the API can be used like:
